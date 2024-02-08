@@ -1,6 +1,5 @@
-
-import lombok.Value;
 import com.github.javafaker.Faker;
+import lombok.Value;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,7 +25,7 @@ public class DataGenerator {
 
     public static String generateName(String locale) {
 
-        String faker  = new Faker(new Locale(locale));
+        var faker = new Faker(new Locale(locale));
         return faker.name().lastName() + " " + faker.name().firstName();
     }
 
@@ -45,9 +44,6 @@ public class DataGenerator {
         public static UserInfo generateUser(String locale) {
             // TODO: добавить логику для создания пользователя user с использованием методов generateCity(locale), generateName(locale), generatePhone(locale)
 
-
-            //  var UserInfo = new UserInfo(generateCity(), generateName(locale), generatePhone(locale));
-            //        return UserInfo;
             return new UserInfo(generateCity(), generateName(locale), generatePhone(locale));
 
         }
