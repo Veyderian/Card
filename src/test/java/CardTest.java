@@ -33,18 +33,20 @@ public class CardTest {
         $("[data-test-id='agreement']").click();
         $(byText("Запланировать")).click();
         $(byText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
-        $("[data-test-id='success-notification'].notification__content")
-                .shouldHave(text("Встреча успешно запланирована на " + firstMeetingDate))
+       // $("[data-test-id='success-notification'].notification__content") не работает
+        $(".notification__content") //работает до следующего notification__content
+                .shouldHave(exactText("Встреча успешно запланирована на " + firstMeetingDate))
                 .shouldBe(visible, Duration.ofSeconds(15));
 
         $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
         $("[data-test-id='date'] input").setValue(secondMeetingDate);
         $(byText("Запланировать")).click();
-        $(".notification__content")
+        $("[data-test-id='replan-notification'].notification__content") //не работает
+       // $(".notification__content") не работает
                 .shouldHave(text("У вас уже запланирована встреча на другую дату. Перепланировать?"))
-                .shouldBe(visible);
+                .shouldBe(visible, Duration.ofSeconds(15));
         $("[data-test-id='replan-notification'] button").click();
-        $("[data-test-id='success-notification'] .notification__content") //изменить
+        $("[data-test-id='success-notification'] .notification__content")
                 .shouldHave(exactText("Встреча успешно забронирована на " + secondMeetingDate))
                 .shouldBe(visible, Duration.ofSeconds(15));
     }
