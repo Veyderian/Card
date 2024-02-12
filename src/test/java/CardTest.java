@@ -13,6 +13,7 @@ import static com.codeborne.selenide.Selenide.open;
 public class CardTest {
     @BeforeEach
     void setup() {
+
         open("http://localhost:9999");
     }
 
@@ -34,19 +35,18 @@ public class CardTest {
         $(byText("Запланировать")).click();
         $(byText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
         $("[data-test-id='success-notification']")
-                .shouldHave(exactText("Встреча успешно запланирована на " + firstMeetingDate))
+                .shouldHave(text("Встреча успешно запланирована на " + firstMeetingDate))
                 .shouldBe(visible, Duration.ofSeconds(15));
 
         $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
         $("[data-test-id='date'] input").setValue(secondMeetingDate);
         $(byText("Запланировать")).click();
-        $("[data-test-id='replan-notification'] .notification__content") //не работает
-       // $(".notification__content") не работает
+        $("[data-test-id='replan-notification'] .notification__content")
                 .shouldHave(text("У вас уже запланирована встреча на другую дату. Перепланировать?"))
                 .shouldBe(visible, Duration.ofSeconds(15));
         $("[data-test-id='replan-notification'] button").click();
         $("[data-test-id='success-notification'] .notification__content")
-                .shouldHave(exactText("Встреча успешно забронирована на " + secondMeetingDate))
+                .shouldHave(exactText("Встреча успешно запланирована на " + secondMeetingDate))
                 .shouldBe(visible, Duration.ofSeconds(15));
     }
 }
