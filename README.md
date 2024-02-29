@@ -1,8 +1,5 @@
 Hello, world!!!
 
-[![Build status](https://ci.appveyor.com/api/projects/status/5e0lbvyd8wqy1cyd?svg=true)](https://ci.appveyor.com/project/Veyderian/card)
-
-
 скриншот 1
 ![image](https://github.com/Veyderian/Card/assets/129328294/5905cf9f-3beb-480d-b3ba-e8f33003b350)
 
