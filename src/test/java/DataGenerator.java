@@ -34,7 +34,12 @@ public class DataGenerator {
         // использовать Faker
         var faker = new Faker(new Locale(locale));
         return faker.phoneNumber().phoneNumber();
+    }
 
+    public static String generateWrongPhone(String locale) {
+        var faker = new Faker(new Locale(locale));
+        //return faker.phoneNumber().cellPhone();  //cellPhone - кол-во цифр на 1 меньше
+        return faker.numerify("######"); //numerify - заменяет решетку цифрами
     }
 
     public static class Registration {
@@ -43,17 +48,12 @@ public class DataGenerator {
 
         public static UserInfo generateUser(String locale) {
             // TODO: добавить логику для создания пользователя user с использованием методов generateCity(locale), generateName(locale), generatePhone(locale)
-
             return new UserInfo(generateCity(), generateName(locale), generatePhone(locale));
-
         }
     }
 
-
     @Value
     public static class UserInfo {
-
-
         String city;
         String name;
         String phone;

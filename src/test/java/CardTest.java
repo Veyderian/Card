@@ -1,3 +1,6 @@
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,19 +14,32 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class CardTest {
+    private final DataGenerator.UserInfo validUser = DataGenerator.Registration.generateUser("ru");
+    private final int daysToAddForFirstMeeting = 4;
+    private final String firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
+
+    @AfterAll
+    static void tearDownAll() {
+        SelenideLogger.removeListener("allure");
+    }
+
+    @BeforeEach
+    void setUpAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
     @BeforeEach
     void setup() {
 
         open("http://localhost:9999");
     }
 
-    @Test
+    @Test //1
     @DisplayName("Should successful plan and replan meeting")
     void shouldSuccessfulPlanAndReplanMeeting() {
         DataGenerator.UserInfo validUser = DataGenerator.Registration.generateUser("ru");
-        var daysToAddForFirstMeeting = 4;
+        int daysToAddForFirstMeeting = 4;
         var firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
-        var daysToAddSecondMeeting = 7;
+        int daysToAddSecondMeeting = 7;
         var secondMeetingDate = DataGenerator.generateDate(daysToAddSecondMeeting);
 
         $("[data-test-id='city'] input").setValue(validUser.getCity());
@@ -48,6 +64,22 @@ public class CardTest {
         $("[data-test-id='success-notification'] .notification__content")
                 .shouldHave(exactText("Встреча успешно запланирована на " + secondMeetingDate))
                 .shouldBe(visible, Duration.ofSeconds(15));
+    }
+
+    @Test //2
+    @DisplayName("should get error message with wrong phone number")
+    void shouldErrorWithWrongPhone() {
+
+        $("[data-test-id='city'] input").setValue(validUser.getCity());
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
+        $("[data-test-id='date'] input").setValue(firstMeetingDate);
+        $("[data-test-id='name'] input").setValue(validUser.getName());
+        $("[data-test-id='phone'] input").setValue(DataGenerator.generateWrongPhone("en"));
+        $("[data-test-id='agreement']").click();
+        $(byText("Запланировать")).click();
+        $("[data-test-id='phone'] .input__sub")
+                .shouldHave(text("Неверный формат номера мобильного телефона"));
+
     }
 }
 
